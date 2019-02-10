@@ -150,6 +150,12 @@ public class World {
 		return r;
 	}
 	
+	public Rock insertFallingRockRandomly() {
+		FallingRock fr = new FallingRock(this);
+		insertRandomly(fr);
+		return fr;
+	}
+	
 	/**
 	 * Insert a new Fish into the world at random of a specific color.
 	 * @param color - the color of the fish.
@@ -226,12 +232,36 @@ public class World {
 	 * @param followers a set of objects to follow the leader.
 	 */
 	public static void objectsFollow(WorldObject target, List<? extends WorldObject> followers) {
-		// TODO(P2) Comment this method!
+		
 		// What is recentPositions?
+		// recentPositions is a Deque of IntPoints. In this method, each IntPoint is the location
+		// in the grid that the target (player) has occupied since the beginning of the game.
+		// Each time the target moves, its new position is added to the top of the Deque.
+		// Currently, the limit of the Deque's size is 64. Once the Deque's size reaches the
+		// limit, any new movement of the target will remove an IntPoint from the bottom of the
+		// Deque and add the new IntPoint to the top of the Deque.
+		
 		// What is followers?
+		// Followers is a list of WorldObjects that are in the found list. The found list consists of
+		// Fish objects that the Player Fish has encountered in the same location on the grid.
+		// When the target (Player) moves, the followers also move behind the target to the target's
+		// recentPositions.
+		
 		// What is target?
+		// The target is the Fish object identified as the Player. The target moves when the user
+		// presses an arrow key on the keyboard. As the targert moves, its new location is added
+		// to the recentPositions Deque.
+		
 		// Why is past = putWhere[i+1]? Why not putWhere[i]?
+		// In the for loop, i has an initial value of zero. putWhere[0] always represents the new 
+		// position of the target after it moves. None of the followers should go to putWhere[0],
+		// which is the current position of the target.
+		// past = putWhere[i+1] ensures that the first follower will go to the second
+		// position in the recentPositions Deque (which is the last position of the target).
+		// The rest of the followers will take the subsequent recentPositions.
+		
 		List<IntPoint> putWhere = new ArrayList<>(target.recentPositions);
+		System.out.println(target.recentPositions);
 		for (int i=0; i<followers.size(); i++) {
 			IntPoint past = putWhere.get(i+1);
 			followers.get(i).setPosition(past.x, past.y);

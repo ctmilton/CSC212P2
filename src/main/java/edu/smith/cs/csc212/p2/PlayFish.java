@@ -215,5 +215,4 @@ public class PlayFish extends GFX {
 		PlayFish game = new PlayFish();
 		game.start();
 	}
-
 }

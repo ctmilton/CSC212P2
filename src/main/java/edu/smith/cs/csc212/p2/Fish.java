@@ -41,6 +41,8 @@ public class Fish extends WorldObject {
 	public void markAsPlayer() {
 		this.player = true;
 	}
+	
+	boolean isFastScared = false;
 
 
 	/**
