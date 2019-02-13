@@ -24,7 +24,8 @@ public class Fish extends WorldObject {
 			Color.cyan,
 			Color.orange,
 			Color.pink
-			// TODO: (P2) Maybe make a special fish that is more points?
+			// Fish objects that are isFastScared are also worth more points
+			// The change in score is implemented in the FishGame class
 	};
 	/**
 	 * This is an index into the {@link #COLORS} array.
@@ -42,6 +43,9 @@ public class Fish extends WorldObject {
 		this.player = true;
 	}
 	
+	/**
+	 * Determines whether a Fish object is scared.
+	 */
 	boolean isFastScared = false;
 
 

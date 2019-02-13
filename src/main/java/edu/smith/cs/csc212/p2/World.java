@@ -203,11 +203,17 @@ public class World {
 		List<WorldObject> inSpot = this.find(x, y);
 		
 		for (WorldObject it : inSpot) {
-			// TODO(P2): Don't let us move over rocks as a Fish.
 			// The other fish shouldn't step "on" the player, the player should step on the other fish.
+			if (isPlayer == false) {
+				return false;
+			}
+			
 			if (it instanceof Snail) {
 				// This if-statement doesn't let anyone step on the Snail.
 				// The Snail(s) are not gonna take it.
+				return false;
+			} else if (it instanceof Rock) {
+				// This if-statement doesn't let anyone step on a Rock object.
 				return false;
 			}
 		}
@@ -217,7 +223,7 @@ public class World {
 	}
 	
 	/**
-	 * This is how objects may move. Only Snails do right now.
+	 * This is how objects may move.
 	 */
 	public void stepAll() {
 		for (WorldObject it : this.items) {

@@ -118,14 +118,22 @@ public class FishGame {
 		for (WorldObject wo : overlap) {
 			// It is missing if it's in our missing list.
 			if (missing.contains(wo)) {
+				
+				// Setting f to be the Fish object wo
+				Fish f = (Fish) wo;
+				
 				// Remove this fish from the missing list.
-				missing.remove(wo);
+				missing.remove(f);
 				
 				// Remove from world.
-				found.add((Fish) wo);
+				found.add(f);
 				
 				// Increase score when you find a fish!
-				score += 10;
+				if (f.isFastScared == true) {
+					score += 15;
+				} else {
+					score += 10;
+				}
 			}
 		}
 		
@@ -143,7 +151,7 @@ public class FishGame {
 	private void wanderMissingFish() {
 		Random rand = ThreadLocalRandom.current();
 		for (Fish lost : missing) {
-			double scaredPercent = 0.4;
+			double scaredPercent = 0.1;
 			if (rand.nextDouble() < scaredPercent) {
 				lost.isFastScared = true;
 			}
@@ -166,11 +174,15 @@ public class FishGame {
 	 * @param y - the y-tile.
 	 */
 	public void click(int x, int y) {
-		// TODO(P2) use this print to debug your World.canSwim changes!
+		// Prints to the console whether the player Fish can swim through the WorldObject or not
 		System.out.println("Clicked on: "+x+","+y+ " world.canSwim(player,...)="+world.canSwim(player, x, y));
 		List<WorldObject> atPoint = world.find(x, y);
-		// TODO(P2) allow the user to click and remove rocks.
-
+		
+		// Allows the user to click and remove rocks.
+		for (WorldObject w: atPoint) {
+			if (world.canSwim(player, x, y) == false) {
+				w.remove();
+			}
+		}
 	}
-	
 }
