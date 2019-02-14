@@ -34,6 +34,11 @@ public class FishGame {
 	List<Fish> found;
 	
 	/**
+	 * These are fish that have returned home!
+	 */
+	List<Fish> atHome;
+	
+	/**
 	 * Number of steps!
 	 */
 	int stepsTaken;
@@ -53,6 +58,7 @@ public class FishGame {
 		
 		missing = new ArrayList<Fish>();
 		found = new ArrayList<Fish>();
+		atHome = new ArrayList<Fish>();
 		
 		// Add a home!
 		home = world.insertFishHome();
@@ -98,8 +104,11 @@ public class FishGame {
 	 * @return true if the player has won (or maybe lost?).
 	 */
 	public boolean gameOver() {
-		// TODO(P2) We want to bring the fish home before we win!
-		return missing.isEmpty();
+		if (atHome.size() == 7) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -125,7 +134,7 @@ public class FishGame {
 				// Remove this fish from the missing list.
 				missing.remove(f);
 				
-				// Remove from world.
+				// Add this fish to the found list.
 				found.add(f);
 				
 				// Increase score when you find a fish!
@@ -134,6 +143,34 @@ public class FishGame {
 				} else {
 					score += 10;
 				}
+			}
+		}
+		
+		// If the player bring followers back home, put all of the found followers fish in the atHome list
+		if (this.player.getX() == this.home.getX() && this.player.getY() == this.home.getY()) {
+			for (Fish f : found) {
+				atHome.add(f);
+				world.remove(f);
+			}
+			found.clear();
+			stepsTaken = 0;
+		}
+		
+		// If more than 20 steps are taken, the last fish will wander away
+		if (this.stepsTaken > 20) {
+			if (!found.isEmpty() && found.size() > 1) {
+				int lastFish = found.size() - 1;
+				Fish loss = found.get(lastFish);
+				missing.add(loss);
+				found.remove(loss);
+			}
+		}
+		
+		// If any wandering fish gets home, it is stuck there!
+		for (Fish lost : missing) {
+			if (lost.getX() == this.home.getX() && lost.getY() == this.home.getY()) {
+				atHome.add(lost);
+				missing.remove(lost);
 			}
 		}
 		
